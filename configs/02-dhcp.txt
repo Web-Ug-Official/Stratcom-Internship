@@ -1,0 +1,5 @@
+! DHCP (router) - clients then obtain addresses dynamically
+! (placeholders as in the internship notes)
+ip dhcp pool <POOL-NAME>
+ network <network-address> <subnet-mask>
+ default-router <gateway-ip>

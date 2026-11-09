@@ -1,0 +1,36 @@
+! ---------- Step 1: router interface + DHCP (Option 150 = TFTP/CME address) ----------
+interface fa0/0
+ ip address 192.168.1.1 255.255.255.0
+ no shutdown
+ip dhcp pool VOICE
+ network 192.168.1.0 255.255.255.0
+ default-router 192.168.1.1
+ option 150 ip 192.168.1.1
+
+! ---------- Step 2: telephony service (Cisco 2811 in Packet Tracer) ----------
+telephony-service
+ max-dn 4
+ max-ephone 4
+ ip source-address 192.168.1.1 port 2000
+ auto assign 1 to 4
+ auto-reg-ephone
+
+! ---------- Step 3: extensions ----------
+ephone-dn 1
+ number 111
+! repeat for each phone with a different ephone-dn / number
+
+! ---------- Step 4: switch voice VLAN ----------
+interface range fa0/1-24
+ switchport mode access
+ switchport voice vlan 1
+
+! ---------- Dial peering between two routers ----------
+! Router 1 -> calls to extensions 5xx go to Router 2
+dial-peer voice 2 voip
+ destination-pattern 5..
+ session target ipv4:192.168.100.2
+! Router 2 -> calls to extensions 2xx go to Router 1
+dial-peer voice 2 voip
+ destination-pattern 2..
+ session target ipv4:192.168.100.1

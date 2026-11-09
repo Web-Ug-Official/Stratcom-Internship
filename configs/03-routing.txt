@@ -1,0 +1,31 @@
+! ---------- Default route (gateway of last resort) ----------
+ip route 0.0.0.0 0.0.0.0 <next-hop | exit-interface>
+
+! ---------- Static route (verify: "show ip route" -> look for S) ----------
+ip route <destination-network> <subnet-mask> <next-hop | exit-interface>
+
+! ---------- RIP v2 (verify: look for R) ----------
+router rip
+ version 2
+ network <network-address>
+ network <network-address>
+
+! ---------- OSPF (verify: look for O) ----------
+router ospf <process-id>
+ network <network-address> <wildcard-mask> area <area-id>
+ network <network-address> <wildcard-mask> area <area-id>
+
+! ---------- EIGRP, e.g. AS 6 (verify: look for D) ----------
+router eigrp 6
+ network x.x.x.x
+ network x.x.x.x
+
+! ---------- BGP between two autonomous systems (verify: look for B) ----------
+! R1
+router bgp 1
+ neighbor x.x.x.x remote-as 2
+ network x.x.x.x mask x.x.x.x
+! R2
+router bgp 2
+ neighbor x.x.x.x remote-as 1
+ network x.x.x.x mask x.x.x.x

@@ -1,0 +1,26 @@
+! ---------- Create a VLAN ----------
+vlan 10
+ name sales
+
+! ---------- Assign ports (access mode) ----------
+interface fa0/4
+ switchport mode access
+ switchport access vlan 10
+
+! ---------- Assign a range of ports ----------
+interface range fa0/1-5
+ switchport mode access
+ switchport access vlan 10
+
+! ---------- Trunk toward the router ----------
+interface fa0/8
+ switchport mode trunk
+
+! ---------- Router-on-a-Stick (router) ----------
+interface g0/0
+ no ip address
+ no shutdown
+interface g0/0.10
+ encapsulation dot1Q 10
+ ip address x.x.x.x x.x.x.x
+! repeat a sub-interface per VLAN with its own IP address

@@ -1,0 +1,31 @@
+! ---------- Port security ----------
+interface fa0/5
+ switchport port-security
+ switchport port-security mac-address x-x-x-x-x
+ switchport port-security violation shutdown
+! Unused ports should be shut down
+
+! ---------- SSH on physical devices ----------
+ip domain-name STRATCOM.COM
+crypto key generate rsa
+username ADMIN password CLASS
+line vty 0 15
+ transport input ssh
+ login local
+
+! ---------- Standard ACL (placed closest to the destination) ----------
+access-list 1 deny x.x.x.x
+access-list 1 permit any
+
+! ---------- Extended ACL (applied on an interface) ----------
+access-list 100 deny ip host x.x.x.x host x.x.x.x
+access-list 100 permit ip any any
+interface g0/1
+ ip access-group 100 out
+
+! ---------- Named extended ACL ----------
+ip access-list extended STRATCOM
+ deny ip host x.x.x.x host x.x.x.x
+ permit ip any any
+interface g0/1
+ ip access-group STRATCOM out

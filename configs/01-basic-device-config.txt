@@ -1,0 +1,15 @@
+! Basic device hardening (switch/router) - Cisco IOS
+! Done in Packet Tracer first, then on physical devices via PuTTY
+Router> enable
+Router# configure terminal
+Router(config)# hostname BWIRE
+BWIRE(config)# enable secret WEB          ! 'enable secret' is encrypted; 'enable password' is not
+BWIRE(config)# line console 0
+BWIRE(config-line)# password WEB
+BWIRE(config-line)# login
+BWIRE(config-line)# exit
+BWIRE(config)# line vty 0 4
+BWIRE(config-line)# password WEB
+BWIRE(config-line)# login
+BWIRE(config-line)# exit
+BWIRE(config)# banner motd "YOU WILL BE ARRESTED"
